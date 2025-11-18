@@ -22,7 +22,7 @@ export const registerUser = async (req, res, next) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id)
+      token: generateToken(user._id),
     });
   } catch (error) {
     next(error);
@@ -43,7 +43,7 @@ export const loginUser = async (req, res, next) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id)
+      token: generateToken(user._id),
     });
   } catch (error) {
     next(error);

@@ -11,10 +11,30 @@ export const getActivitiesForTrip = async (req, res, next) => {
       throw new Error("Trip not found or not owned by user");
     }
 
-    const activities = await Activity.find({ trip: tripId, user: req.user._id })
-      .sort({ date: 1 });
+    const activities = await Activity.find({
+      trip: tripId,
+      user: req.user._id,
+    }).sort({ date: 1 });
 
     res.json(activities);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getActivityById = async (req, res, next) => {
+  try {
+    const activity = await Activity.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    }).populate("trip");
+
+    if (!activity) {
+      res.status(404);
+      throw new Error("Activity not found");
+    }
+
+    res.json(activity);
   } catch (error) {
     next(error);
   }
@@ -23,7 +43,16 @@ export const getActivitiesForTrip = async (req, res, next) => {
 export const createActivity = async (req, res, next) => {
   try {
     const { tripId } = req.params;
-    const { name, location, price, currency, date, isCompleted, rating, comment } = req.body;
+    const {
+      name,
+      location,
+      price,
+      currency,
+      date,
+      isCompleted,
+      rating,
+      comment,
+    } = req.body;
 
     const trip = await Trip.findOne({ _id: tripId, user: req.user._id });
     if (!trip) {
@@ -46,7 +75,7 @@ export const createActivity = async (req, res, next) => {
       date,
       isCompleted,
       rating,
-      comment
+      comment,
     });
 
     res.status(201).json(activity);
@@ -59,7 +88,7 @@ export const updateActivity = async (req, res, next) => {
   try {
     const activity = await Activity.findOne({
       _id: req.params.id,
-      user: req.user._id
+      user: req.user._id,
     });
 
     if (!activity) {
@@ -81,7 +110,7 @@ export const deleteActivity = async (req, res, next) => {
   try {
     const activity = await Activity.findOne({
       _id: req.params.id,
-      user: req.user._id
+      user: req.user._id,
     });
 
     if (!activity) {
