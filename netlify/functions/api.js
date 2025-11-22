@@ -14,7 +14,6 @@ dotenv.config();
 
 const app = express();
 
-// NEMA app.use(express.json()) ovdje
 app.use(cors());
 
 if (process.env.NODE_ENV === "development") {
